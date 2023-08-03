@@ -5,7 +5,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.40.0'
 }
 
-group 'com.github.qwazer'
+group 'mil.army.usace.hec'
 description 'A plugin for publishing markdown or confluence wiki files to an Atlassian Confluence server'
 
 repositories {
@@ -28,11 +28,11 @@ dependencies {
 }
 
 gradlePlugin {
-    website = 'https://github.com/qwazer/markdown-confluence-gradle-plugin'
-    vcsUrl = 'https://github.com/qwazer/markdown-confluence-gradle-plugin.git'
+    website = 'https://github.com/adamkorynta/markdown-confluence-gradle-plugin'
+    vcsUrl = 'https://github.com/adamkorynta/markdown-confluence-gradle-plugin.git'
     plugins {
         markdownConfluenceGradlePlugin {
-            id = 'com.github.qwazer.markdown-confluence'
+            id = 'mil.army.usace.hec.markdown-confluence'
             implementationClass = 'com.github.qwazer.markdown.confluence.gradle.plugin.ConfluenceGradlePlugin'
             description = project.description
             displayName = 'Markdown Confluence'
