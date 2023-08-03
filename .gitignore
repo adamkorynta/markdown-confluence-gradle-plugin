@@ -13,6 +13,9 @@
 .idea/jarRepositories.xml
 .idea/misc.xml
 .idea/compiler.xml
+.idea/sonarlint
+.idea/checkstyle-idea.xml
+.idea/copyright
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
