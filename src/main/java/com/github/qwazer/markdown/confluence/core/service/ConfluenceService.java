@@ -171,20 +171,19 @@ public class ConfluenceService {
         return parseResponseEntityToConfluencePage(executeRequest(findSpaceHomePageRequest()));
     }
 
-    public void updatePage(final ConfluencePage page) {
-        executeRequest(updatePageRequest(page));
+    public void updatePage(final ConfluencePage page, String representation) {
+        executeRequest(updatePageRequest(page, representation));
     }
 
-    public Request updatePageRequest(final ConfluencePage page) {
+    public Request updatePageRequest(final ConfluencePage page, String representation) {
         final HttpUrl url = baseUrl
             .newBuilder()
             .addPathSegments(String.format("content/%s", page.getId()))
             .build();
 
-        final ObjectNode requestBody = buildPostBody(page);
+        final ObjectNode requestBody = buildPostBody(page, representation);
         requestBody.put(ID, page.getId());
         requestBody.set(PAGE_VERSION, mapper.createObjectNode().put(VERSION_NUMBER, page.getVersion() + 1));
-
         return new Request.Builder()
             .url(url)
             .put(RequestBody.create(requestBody.toString(), MediaType.parse("application/json")))
@@ -225,7 +224,7 @@ public class ConfluenceService {
             .addPathSegment("content")
             .build();
 
-        final ObjectNode requestBody = buildPostBody(page);
+        final ObjectNode requestBody = buildPostBody(page, "wiki");
         return new Request.Builder()
             .url(url)
             .post(RequestBody.create(requestBody.toString(), MediaType.parse("application/json")))
@@ -320,14 +319,14 @@ public class ConfluenceService {
     }
 
 
-    private ObjectNode buildPostBody(ConfluencePage confluencePage) {
+    private ObjectNode buildPostBody(ConfluencePage confluencePage, String representation) {
 
         final ObjectNode spaceNode = mapper.createObjectNode();
         spaceNode.put("key", spaceKey);
 
         final ObjectNode storageData = mapper.createObjectNode();
         storageData.put("value", confluencePage.getContent());
-        storageData.put("representation", "wiki");
+        storageData.put("representation", representation);
 
         final ObjectNode storageNode = mapper.createObjectNode();
         storageNode.set("storage", storageData);

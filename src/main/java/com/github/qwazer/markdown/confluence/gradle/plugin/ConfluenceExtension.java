@@ -78,6 +78,8 @@ public abstract class ConfluenceExtension {
         private final String name;
         private String parentTitle;
         private File srcFile;
+
+        private boolean prependContent;
         private List<String> labels = new ArrayList<>();
 
         public Page(String name) {
@@ -139,6 +141,13 @@ public abstract class ConfluenceExtension {
                 .collect(Collectors.toList());
         }
 
+        public boolean isPrepend() {
+            return prependContent;
+        }
+
+        public void setPrepend(boolean prepend) {
+            this.prependContent = prepend;
+        }
     }
 
 }

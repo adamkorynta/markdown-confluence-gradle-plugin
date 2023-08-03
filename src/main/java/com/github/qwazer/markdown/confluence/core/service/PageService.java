@@ -114,12 +114,23 @@ public class PageService {
 
         ConfluencePage confluencePage =
             confluenceService.findPageByTitle(page.getName());
-        if (confluencePage != null) {               // page exists
+        if (confluencePage != null) {               // page ex
+            String originalHtmlContent = confluencePage.getContent();// ists
             LOG.info("Updating existing page: {}", confluencePage);
             confluencePage.setContent(wikiText);
             confluencePage.setLabels(page.getLabels());
-            confluenceService.updatePage(confluencePage);
+            confluenceService.updatePage(confluencePage, "wiki");
             confluenceService.addLabels(confluencePage.getId(), page.getLabels());
+            for (Map.Entry<String, Path> entry : images.entrySet()) {
+                attachmentService.postAttachmentToPage(confluencePage.getId(), entry.getValue());
+            }
+            if(page.isPrepend()) {
+                ConfluencePage updatedPage = confluenceService.findPageByTitle(page.getName());
+                String newContentInHtml = updatedPage.getContent();
+                String fullHtmlContent = newContentInHtml + "<hr/>" + originalHtmlContent;
+                updatedPage.setContent(fullHtmlContent);
+                confluenceService.updatePage(updatedPage, "storage");
+            }
         } else {
             confluencePage = new ConfluencePage();
             confluencePage.setContent(wikiText);
@@ -133,11 +144,11 @@ public class PageService {
                 confluenceService.createPage(confluencePage);
             confluencePage.setId(pageId);
             confluenceService.addLabels(pageId, page.getLabels());
+            for (Map.Entry<String, Path> entry : images.entrySet()) {
+                attachmentService.postAttachmentToPage(confluencePage.getId(), entry.getValue());
+            }
         }
 
-        for (Map.Entry<String, Path> entry : images.entrySet()) {
-            attachmentService.postAttachmentToPage(confluencePage.getId(), entry.getValue());
-        }
 
         return confluencePage.getId();
     }
